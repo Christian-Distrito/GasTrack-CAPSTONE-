@@ -1,0 +1,166 @@
+/* ---------------------------------------------------------------------- */
+/* Sidebar container                                                      */
+/* ---------------------------------------------------------------------- */
+
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #eef0f3;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Logo                                                                   */
+/* ---------------------------------------------------------------------- */
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 8px 4px;
+}
+
+.sidebar-logo-icon {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.sidebar-logo-accent {
+  color: #ef4444;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Top icons: avatar + notification bell                                  */
+/* ---------------------------------------------------------------------- */
+
+.sidebar-top-icons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-bottom: 8px;
+}
+
+.icon-circle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.icon-circle:hover {
+  background: #e5e7eb;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #ffffff;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Search bar                                                             */
+/* ---------------------------------------------------------------------- */
+
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f3f5f8;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.sidebar-search-icon {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.sidebar-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.875rem;
+  color: #374151;
+  width: 100%;
+}
+
+.sidebar-search-input::placeholder {
+  color: #9ca3af;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Nav list                                                               */
+/* ---------------------------------------------------------------------- */
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #374151;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
+.sidebar-nav-item:hover {
+  background: #f3f5f8;
+}
+
+.sidebar-nav-item.active {
+  background: #eef1f6;
+  font-weight: 600;
+  color: #111827;
+}
+
+.sidebar-nav-icon {
+  flex-shrink: 0;
+  color: #374151;
+}
+
+.sidebar-nav-item.active .sidebar-nav-icon {
+  color: #111827;
+}
