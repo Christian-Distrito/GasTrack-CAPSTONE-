@@ -29,12 +29,12 @@ const navItems = [
   { id: "products", label: "Products", icon: Package },
   { id: "sales", label: "Sales", icon: DollarSign },
   { id: "restocking", label: "Restocking", icon: RotateCcw },
+  { id: "orders", label: "Order and Delivery", icon: Truck },
   { id: "suppliers", label: "Suppliers", icon: Users },
+  { id: "report", label: "Report and Compliance", icon: FileText },
   { id: "data", label: "Data", icon: Database },
   { id: "users", label: "Users", icon: User },
-  { id: "settings", label: "Settings", icon: Settings },
-  { id: "report", label: "Report and Compliance", icon: FileText },
-  { id: "orders", label: "Order and Delivery", icon: Truck },
+  { id: "settings", label: "Settings", icon: Settings },  
 ];
 
 // ---------------------------------------------------------------------------
