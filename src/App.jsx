@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import Dashboard from "./Dashboard";
 import PosTerminal from "./PosTerminal";
 import PaymentModal from "./PaymentModal";
+import Sales from "./Sales";
 import Users from "./Users";
 import Inventory from "./Inventory";
 import Products from "./Products";
@@ -10,6 +11,7 @@ import Restocking from "./Restocking";
 import AddProductModal from "./AddProductModal";
 import Suppliers from "./Suppliers";
 import "./App.css";
+import ReportCompliance from "./ReportCompliance";
 
 // ---------------------------------------------------------------------------
 // App shell — Sidebar on the left, active page on the right.
@@ -24,13 +26,13 @@ const pages = {
   pos: PosTerminal,
   inventory: Inventory,
   products: Products,
-  // sales: Sales,
+  sales: Sales,
   restocking: Restocking,
   suppliers: Suppliers,
   // data: Data,
    users: Users,
   // settings: Settings,
-  // report: ReportAndCompliance,
+  report: ReportCompliance,
   // orders: OrderAndDelivery,
 };
 
