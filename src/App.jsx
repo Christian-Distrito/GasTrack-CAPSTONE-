@@ -5,6 +5,7 @@ import PosTerminal from "./PosTerminal";
 import PaymentModal from "./PaymentModal";
 import Users from "./Users";
 import Inventory from "./Inventory";
+import Products from "./Products";
 import "./App.css";
 
 // ---------------------------------------------------------------------------
@@ -19,7 +20,7 @@ const pages = {
   dashboard: Dashboard,
   pos: PosTerminal,
   inventory: Inventory,
-  // products: Products,
+  products: Products,
   // sales: Sales,
   // restocking: Restocking,
   // suppliers: Suppliers,
