@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import PosTerminal from "./PosTerminal";
 import PaymentModal from "./PaymentModal";
 import Users from "./Users";
+import Inventory from "./Inventory";
 import "./App.css";
 
 // ---------------------------------------------------------------------------
@@ -17,7 +18,7 @@ import "./App.css";
 const pages = {
   dashboard: Dashboard,
   pos: PosTerminal,
-  // inventory: Inventory,
+  inventory: Inventory,
   // products: Products,
   // sales: Sales,
   // restocking: Restocking,
