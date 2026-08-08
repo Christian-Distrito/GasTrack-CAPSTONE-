@@ -1,5 +1,5 @@
-/* Modal Overlay & Base Card */
-.add-product-modal-overlay {
+/* Modal Backdrop Overlay */
+.supplier-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,59 +13,67 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.add-product-modal-card {
+/* Modal Popup Card */
+.supplier-modal-card {
   background: #ffffff;
   border-radius: 12px;
   padding: 32px 36px;
-  max-width: 520px;
+  max-width: 560px;
   width: 90%;
-  
-  /* Enable vertical scrollbar */
-  max-height: 85vh; /* Limits card height to 85% of the screen height */
-  overflow-y: auto; /* Adds vertical scrollbar when content overflows */
-  
+  max-height: 85vh;
+  overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* Custom scrollbar styling */
-.add-product-modal-card::-webkit-scrollbar {
+/* Custom Vertical Scrollbar */
+.supplier-modal-card::-webkit-scrollbar {
   width: 6px;
 }
 
-.add-product-modal-card::-webkit-scrollbar-track {
+.supplier-modal-card::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 8px;
 }
 
-.add-product-modal-card::-webkit-scrollbar-thumb {
+.supplier-modal-card::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 8px;
 }
 
-.add-product-modal-card::-webkit-scrollbar-thumb:hover {
+.supplier-modal-card::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
 
-.add-product-title {
+/* Titles and Headers */
+.supplier-modal-title {
   font-size: 1.5rem;
   font-weight: 800;
   color: #111827;
   margin: 0;
 }
 
-/* Grid Layout for Form Fields */
-.add-product-form {
+.supplier-section-header {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Grid Layouts */
+.supplier-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.form-row-2 {
+.form-row-2-1 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2.5fr;
   gap: 16px;
 }
 
@@ -73,6 +81,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
+}
+
+.form-row-equal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
 .form-field {
@@ -87,13 +101,13 @@
   color: #374151;
 }
 
-/* Rounded Inputs and Select Dropdowns */
+/* Inputs & Dropdowns */
 .form-field input,
 .form-field select {
   width: 100%;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  padding: 9px 14px;
+  padding: 10px 14px;
   font-size: 0.875rem;
   color: #111827;
   outline: none;
@@ -106,41 +120,23 @@
   border-color: #1d6bf3;
 }
 
-/* Image Upload Row Alignment */
-.form-field-inline {
+/* Modal Actions and Fixed Button Sizing */
+.supplier-modal-actions {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-}
-
-.form-field-inline label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #374151;
-}
-
-.btn-file-upload {
-  background: #e5e7eb;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 6px 16px;
-  font-size: 0.813rem;
-  color: #111827;
-  cursor: pointer;
-}
-
-/* Equal Button Actions */
-.add-product-modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
+  gap: 24px;
   margin-top: 12px;
+  width: 100%;
 }
 
 button.btn-modal-cancel,
-button.btn-modal-add {
-  flex: 1 !important;
+button.btn-modal-submit {
+  width: 140px !important;
   height: 42px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  flex: none !important;
   box-sizing: border-box !important;
   border-radius: 8px !important;
   font-size: 0.95rem !important;
@@ -157,8 +153,16 @@ button.btn-modal-cancel {
   border: 1px solid #d1d5db !important;
 }
 
-button.btn-modal-add {
+button.btn-modal-cancel:hover {
+  background: #d1d5db !important;
+}
+
+button.btn-modal-submit {
   background: #1d6bf3 !important;
   color: #ffffff !important;
-  border: none !important;
+  border: 1px solid transparent !important;
+}
+
+button.btn-modal-submit:hover {
+  background: #1456c7 !important;
 }

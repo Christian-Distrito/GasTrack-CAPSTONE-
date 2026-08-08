@@ -7,6 +7,8 @@ import Users from "./Users";
 import Inventory from "./Inventory";
 import Products from "./Products";
 import Restocking from "./Restocking";
+import AddProductModal from "./AddProductModal";
+import Suppliers from "./Suppliers";
 import "./App.css";
 
 // ---------------------------------------------------------------------------
@@ -24,7 +26,7 @@ const pages = {
   products: Products,
   // sales: Sales,
   restocking: Restocking,
-  // suppliers: Suppliers,
+  suppliers: Suppliers,
   // data: Data,
    users: Users,
   // settings: Settings,
