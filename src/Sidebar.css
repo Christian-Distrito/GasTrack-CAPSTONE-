@@ -24,23 +24,14 @@
 .sidebar-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 4px 8px 4px;
+  justify-content: center;
+  padding: 14px 20px -15px;
 }
 
-.sidebar-logo-icon {
-  color: #2563eb;
-  flex-shrink: 0;
-}
-
-.sidebar-logo-text {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #1f2937;
-}
-
-.sidebar-logo-accent {
-  color: #ef4444;
+.sidebar-logo-img {
+  max-width: 220px; /* Adjust size based on image dimensions */
+  height: auto;
+  object-fit: contain;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -51,6 +42,7 @@
   display: flex;
   justify-content: center;
   gap: 16px;
+  margin-top: -30px;
   padding-bottom: 8px;
 }
 

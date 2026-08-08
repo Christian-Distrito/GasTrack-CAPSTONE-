@@ -16,6 +16,9 @@ import {
   Bell,
   UserCircle,
 } from "lucide-react";
+
+// Import your custom logo image
+import logoImg from "./assets/logo.png";
 import "./Sidebar.css";
 
 // ---------------------------------------------------------------------------
@@ -56,12 +59,9 @@ export default function Sidebar({ activeItem, onNavigate, notificationCount = 9 
 
   return (
     <aside className="sidebar">
-      {/* Logo */}
+      {/* Custom Image Logo */}
       <div className="sidebar-logo">
-        <Truck size={22} className="sidebar-logo-icon" />
-        <span className="sidebar-logo-text">
-          Gas<span className="sidebar-logo-accent">Track</span>
-        </span>
+        <img src={logoImg} alt="GasTrack Logo" className="sidebar-logo-img" />
       </div>
 
       {/* Avatar + notification bell */}
