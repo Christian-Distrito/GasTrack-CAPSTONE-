@@ -6,6 +6,7 @@ import PaymentModal from "./PaymentModal";
 import Users from "./Users";
 import Inventory from "./Inventory";
 import Products from "./Products";
+import Restocking from "./Restocking";
 import "./App.css";
 
 // ---------------------------------------------------------------------------
@@ -22,7 +23,7 @@ const pages = {
   inventory: Inventory,
   products: Products,
   // sales: Sales,
-  // restocking: Restocking,
+  restocking: Restocking,
   // suppliers: Suppliers,
   // data: Data,
    users: Users,
