@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Login from "./Login";
 import Sidebar from "./Sidebar";
 import Dashboard from "./Dashboard";
 import PosTerminal from "./PosTerminal";
@@ -37,7 +38,24 @@ const pages = {
 };
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeItem, setActiveItem] = useState("dashboard");
+
+  const handleLogin = async ({ username, password }) => {
+    // Replace this with your real authentication call, e.g.:
+    // const res = await fetch("/api/auth/login", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ username, password }),
+    // });
+    // if (!res.ok) throw new Error("Invalid username or password");
+    console.log("Logging in with", username, password);
+    setIsAuthenticated(true);
+  };
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   const ActivePage = pages[activeItem] || Dashboard;
 
