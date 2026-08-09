@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import logo from "./assets/logo.png";
+import navLogo from "./assets/logo-login.png";
+import cardLogo from "./assets/logo.png";
 import "./Login.css";
 
 // ---------------------------------------------------------------------------
@@ -11,7 +12,7 @@ function TopNav() {
   return (
     <header className="login-nav">
       <div className="login-nav-brand">
-        <img src={logo} alt="GasTrack" className="login-nav-logo" />
+        <img src={navLogo} alt="GasTrack" className="login-nav-logo" />
       </div>
       <nav className="login-nav-links">
         <a href="#home" className="login-nav-link active">Home</a>
@@ -71,7 +72,7 @@ export default function Login({ onLogin }) {
       <div className="login-content">
         <div className="login-card">
           <div className="login-card-logo">
-            <img src={logo} alt="GasTrack" className="login-card-logo-img" />
+            <img src={cardLogo} alt="GasTrack" className="login-card-logo-img" />
           </div>
 
           <p className="login-welcome">Welcome to GasTrack!</p>
