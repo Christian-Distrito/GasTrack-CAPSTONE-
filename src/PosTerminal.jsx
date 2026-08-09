@@ -2,18 +2,32 @@ import React, { useMemo, useState } from "react";
 import { Search, ChevronDown, ShoppingCart, ImageOff, Wallet, Minus, Plus, X } from "lucide-react";
 import PaymentModal from "./PaymentModal";
 import "./PosTerminal.css";
+import gasul27 from "./assets/Products/Gasul 2.7KG.png";
+import gasul7 from "./assets/Products/Gasul 7KG.png";
+import gasul11 from "./assets/Products/Gasul 11KG.png";
 
 // ---------------------------------------------------------------------------
 // Mock product catalog — replace with real data / API call
+//
+// `image` can be either:
+//   1. A LOCAL import — put files in e.g. `src/assets/products/`, then:
+//        import gasul27 from "./assets/products/gasul-2.7kg.png";
+//      and set `image: gasul27` below.
+//   2. A URL string — once images are served from a backend/CDN, just set
+//        image: "https://yourcdn.com/products/gasul-2.7kg.png"
+//      No import needed for this option.
+//
+// If `image` is left undefined/null, the card falls back to the gray
+// placeholder icon automatically (see ProductCard below).
 // ---------------------------------------------------------------------------
 
 const products = [
-  { id: "p1", category: "Gasul", name: "Gasul LPG 2.7kg", stock: 5, price: 249.0 },
-  { id: "p2", category: "Gasul", name: "Gasul LPG 7kg", stock: 20, price: 603.0 },
-  { id: "p3", category: "Gasul", name: "Gasul LPG 11kg", stock: 10, price: 907.0 },
-  { id: "p4", category: "Cylinder", name: "Cylinder 2.7kg", stock: 10, price: 1000.0 },
-  { id: "p5", category: "Cylinder", name: "Cylinder 7kg", stock: 25, price: 1800.0 },
-  { id: "p6", category: "Cylinder", name: "Cylinder 22kg", stock: 25, price: 3800.0 },
+  { id: "p1", category: "Gasul", name: "Gasul LPG 2.7KG", stock: 5, price: 249.0, image: gasul27 },
+  { id: "p2", category: "Gasul", name: "Gasul LPG 7KG", stock: 20, price: 603.0, image: gasul7 },
+  { id: "p3", category: "Gasul", name: "Gasul LPG 11KG", stock: 10, price: 907.0, image: gasul11 },
+  { id: "p4", category: "Cylinder", name: "Cylinder 2.7KG", stock: 10, price: 1000.0, image: null },
+  { id: "p5", category: "Cylinder", name: "Cylinder 7KG", stock: 25, price: 1800.0, image: null },
+  { id: "p6", category: "Cylinder", name: "Cylinder 22KG", stock: 25, price: 3800.0, image: null },
 ];
 
 const categories = ["All Categories", ...new Set(products.map((p) => p.category))];
@@ -42,7 +56,11 @@ function ProductCard({ product, onAdd }) {
     <button type="button" className="product-card" onClick={() => onAdd(product)}>
       <span className="product-category">{product.category}</span>
       <div className="product-image">
-        <ImageOff size={28} strokeWidth={1.5} />
+        {product.image ? (
+          <img src={product.image} alt={product.name} className="product-image-img" />
+        ) : (
+          <ImageOff size={28} strokeWidth={1.5} />
+        )}
       </div>
       <p className="product-name">{product.name}</p>
       <p className="product-stock">Stock: {product.stock}</p>
@@ -50,7 +68,6 @@ function ProductCard({ product, onAdd }) {
     </button>
   );
 }
-
 // ---------------------------------------------------------------------------
 // Cart line item
 // ---------------------------------------------------------------------------
