@@ -13,6 +13,7 @@ import AddProductModal from "./AddProductModal";
 import Suppliers from "./Suppliers";
 import "./App.css";
 import ReportCompliance from "./ReportCompliance";
+import Data from "./Data";
 
 // ---------------------------------------------------------------------------
 // App shell — Sidebar on the left, active page on the right.
@@ -30,8 +31,8 @@ const pages = {
   sales: Sales,
   restocking: Restocking,
   suppliers: Suppliers,
-  // data: Data,
-   users: Users,
+  data: Data,
+  users: Users,
   // settings: Settings,
   report: ReportCompliance,
   // orders: OrderAndDelivery,
