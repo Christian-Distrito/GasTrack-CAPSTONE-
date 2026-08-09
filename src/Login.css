@@ -1,3 +1,14 @@
+/* Global Interactive Base & Smooth Transitions */
+button,
+input,
+select,
+textarea,
+.login-nav-link,
+.contact-info-card,
+.login-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* Page Layout Container */
 .login-page {
   min-height: 100vh;
@@ -19,7 +30,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .login-nav-brand {
@@ -42,13 +52,14 @@
 }
 
 .login-nav-link {
+  background: none;
+  border: none;
   color: #d1d5db;
-  text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
   padding: 6px 0;
+  cursor: pointer;
   position: relative;
-  transition: color 0.2s ease;
 }
 
 .login-nav-link:hover {
@@ -80,16 +91,30 @@
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .login-nav-cta:hover {
   background-color: #b91c1c;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+.login-nav-cta:active {
+  transform: translateY(0);
+}
+
+.login-nav-cta.secondary {
+  background-color: transparent;
+  border: 1px solid #ffffff;
+}
+
+.login-nav-cta.secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
 }
 
 /* ---------------------------------------------------------------------- */
-/* Main Content & Login Card                                              */
+/* Main Content Layout                                                    */
 /* ---------------------------------------------------------------------- */
 
 .login-content {
@@ -100,10 +125,13 @@
   padding: 40px 20px;
 }
 
+/* ---------------------------------------------------------------------- */
+/* Login Card View                                                       */
+/* ---------------------------------------------------------------------- */
+
 .login-card {
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
   padding: 48px 44px;
   width: 100%;
   max-width: 480px;
@@ -112,13 +140,20 @@
   align-items: center;
   text-align: center;
   border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.login-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 
 .login-card-logo-img {
-  height: 100px;
+  height: 90px !important;
   width: auto !important;
+  max-width: 100%;
   object-fit: contain;
   margin-bottom: 20px;
+  display: block;
 }
 
 .login-welcome {
@@ -133,10 +168,6 @@
   color: #6b7280;
   margin: 0 0 32px 0;
 }
-
-/* ---------------------------------------------------------------------- */
-/* Form Controls & Inputs                                                 */
-/* ---------------------------------------------------------------------- */
 
 .login-form {
   width: 100%;
@@ -157,6 +188,11 @@
   left: 14px;
   color: #9ca3af;
   pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.input-field-group:focus-within .field-icon {
+  color: #1e3a5f;
 }
 
 .login-input {
@@ -169,7 +205,17 @@
   outline: none;
   background-color: #ffffff;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-input:hover,
+.reg-input:hover {
+  border-color: #9ca3af;
+}
+
+.login-input:focus,
+.reg-input:focus {
+  border-color: #1e3a5f;
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.12);
 }
 
 .login-input.has-toggle {
@@ -178,11 +224,6 @@
 
 .login-input::placeholder {
   color: #9ca3af;
-}
-
-.login-input:focus {
-  border-color: #1e3a5f;
-  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.12);
 }
 
 .login-password-toggle {
@@ -195,7 +236,6 @@
   display: flex;
   align-items: center;
   padding: 0;
-  transition: color 0.2s ease;
 }
 
 .login-password-toggle:hover {
@@ -225,7 +265,6 @@
   font-weight: 500;
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s ease;
 }
 
 .login-forgot:hover {
@@ -243,15 +282,542 @@
   font-weight: 800;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.login-submit:hover:not(:disabled) {
+.login-submit:hover:not(:disabled),
+.reg-submit-btn:hover,
+.contact-submit-btn:hover {
   background-color: #17304d;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
+}
+
+.login-submit:active:not(:disabled),
+.reg-submit-btn:active,
+.contact-submit-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .login-submit:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Register LPG Company View                                           */
+/* ---------------------------------------------------------------------- */
+
+.register-layout-container {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 1140px;
+  align-items: start;
+}
+
+.register-sidebar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.register-stepper-card {
+  background-color: #1b365d;
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 36px 28px;
+  box-sizing: border-box;
+}
+
+.register-stepper-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+
+.register-stepper-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.15);
+  margin-bottom: 20px;
+}
+
+.register-stepper-desc {
+  font-size: 0.825rem;
+  color: #8da4c4;
+  line-height: 1.5;
+  margin: 0 0 28px 0;
+}
+
+.stepper-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.stepper-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.stepper-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #70262b;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.stepper-badge.active {
+  background-color: #e02424;
+}
+
+.stepper-step-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stepper-step-info strong {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.stepper-step-info span {
+  font-size: 0.78rem;
+  color: #8da4c4;
+  line-height: 1.35;
+}
+
+.register-reqs-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.register-reqs-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 14px 0;
+}
+
+.register-reqs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.register-reqs-list li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.register-reqs-list li::before {
+  content: "•";
+  color: #dc2626;
+  font-weight: bold;
+  font-size: 1.2rem;
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+
+.register-main-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 40px;
+}
+
+.register-heading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.register-subheading {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0 0 28px 0;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.register-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.register-section-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #dc2626;
+  letter-spacing: 0.05em;
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #fee2e2;
+}
+
+.reg-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.reg-grid.two-col {
+  grid-template-columns: 1fr 1fr;
+}
+
+.reg-grid.three-col {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.reg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reg-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.reg-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  color: #374151;
+  outline: none;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.reg-input::placeholder {
+  color: #9ca3af;
+}
+
+.reg-checkbox-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.reg-checkbox {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #1e3a5f;
+}
+
+.reg-checkbox-label {
+  font-size: 0.75rem;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+.reg-link {
+  color: #dc2626;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.reg-link:hover {
+  text-decoration: underline;
+}
+
+.reg-submit-btn {
+  background-color: #1e3a5f;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* About Page View Layout                                                 */
+/* ---------------------------------------------------------------------- */
+
+.about-card {
+  background-color: #1b365d;
+  border-radius: 24px;
+  padding: 56px;
+  width: 100%;
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.about-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #dc2626;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.about-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  margin: 0 0 20px 0;
+}
+
+.about-highlight {
+  color: #e02424;
+}
+
+.about-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #d1d5db;
+  margin: 0;
+}
+
+.about-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-stat-box {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #e02424;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #d1d5db;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Contact Page View Layout                                               */
+/* ---------------------------------------------------------------------- */
+
+.contact-layout-container {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 1040px;
+  align-items: stretch;
+}
+
+.contact-sidebar {
+  background-color: #1b365d;
+  border-radius: 20px;
+  padding: 36px 28px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-sidebar-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+
+.contact-sidebar-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.15);
+  margin-bottom: 20px;
+}
+
+.contact-sidebar-desc {
+  font-size: 0.825rem;
+  color: #8da4c4;
+  line-height: 1.5;
+  margin: 0 0 32px 0;
+}
+
+.contact-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-info-card {
+  background-color: #2e4a73;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.contact-info-card:hover {
+  background-color: #385785;
+  transform: translateX(4px);
+}
+
+.info-icon-wrapper {
+  background-color: #3b5883;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d85c37;
+  flex-shrink: 0;
+}
+
+.info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-text strong {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.info-text span {
+  font-size: 0.78rem;
+  color: #a3b8d4;
+}
+
+.contact-main-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 44px;
+}
+
+.contact-heading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.contact-subheading {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0 0 28px 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-form .reg-input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 0.875rem;
+  color: #374151;
+  background-color: #ffffff;
+}
+
+/* Custom Select Dropdown & Chevron Symbol */
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.reg-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px !important;
+  cursor: pointer;
+}
+
+.select-chevron {
+  position: absolute;
+  right: 14px;
+  color: #6b7280;
+  pointer-events: none;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.select-wrapper:focus-within .select-chevron {
+  color: #1e3a5f;
+  transform: rotate(180deg);
+}
+
+.contact-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+.contact-submit-btn {
+  background-color: #1b365d;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .register-layout-container,
+  .contact-layout-container,
+  .about-card {
+    grid-template-columns: 1fr;
+  }
 }
