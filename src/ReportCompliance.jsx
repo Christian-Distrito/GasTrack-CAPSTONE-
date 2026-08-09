@@ -11,11 +11,6 @@ import {
 } from "lucide-react";
 import "./ReportCompliance.css";
 
-// ---------------------------------------------------------------------------
-// Mock data — replace with real API data
-// Dates use ISO "YYYY-MM-DD" so they're easy to compare against calendar cells.
-// ---------------------------------------------------------------------------
-
 const reports = [
   {
     id: "r1",
@@ -25,7 +20,7 @@ const reports = [
     dueLabel: "Due: Jun 30, 2026",
     relative: "Tomorrow",
     size: "2.4 MB",
-    status: "Due Soon", // Due Soon | Upcoming | Overdue
+    status: "Due Soon",
   },
   {
     id: "r2",
@@ -101,13 +96,9 @@ function toISODate(date) {
   return `${y}-${m}-${d}`;
 }
 
-// Build a Monday-first 6-row calendar grid for the given month/year,
-// including the trailing days of the previous/next month to fill the grid.
 function buildCalendarGrid(year, month) {
   const firstOfMonth = new Date(year, month, 1);
-  // getDay(): 0=Sun..6=Sat -> convert to Monday-first index (0=Mon..6=Sun)
   const firstWeekday = (firstOfMonth.getDay() + 6) % 7;
-
   const gridStart = new Date(year, month, 1 - firstWeekday);
 
   const cells = [];
@@ -118,10 +109,6 @@ function buildCalendarGrid(year, month) {
   }
   return cells;
 }
-
-// ---------------------------------------------------------------------------
-// Stat card
-// ---------------------------------------------------------------------------
 
 function StatCard({ label, value, sub, tone, icon: Icon }) {
   return (
@@ -137,10 +124,6 @@ function StatCard({ label, value, sub, tone, icon: Icon }) {
     </div>
   );
 }
-
-// ---------------------------------------------------------------------------
-// Recent report row
-// ---------------------------------------------------------------------------
 
 function ReportRow({ report }) {
   const tone = statusIconTone(report.status);
@@ -166,12 +149,8 @@ function ReportRow({ report }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Main component
-// ---------------------------------------------------------------------------
-
 export default function ReportCompliance() {
-  const initial = new Date(2026, 5, 30); // June 30, 2026 — matches the reference design
+  const initial = new Date(2026, 5, 30);
   const [viewYear, setViewYear] = useState(initial.getFullYear());
   const [viewMonth, setViewMonth] = useState(initial.getMonth());
   const [selectedDate, setSelectedDate] = useState(toISODate(initial));
@@ -218,22 +197,24 @@ export default function ReportCompliance() {
       <div className="rc-inner">
         <h1 className="rc-title">Report and Compliance</h1>
 
-        {/* Stat cards */}
+        {/* Stat Cards */}
         <div className="rc-stat-grid">
           {statCards.map((card) => (
             <StatCard key={card.label} {...card} />
           ))}
         </div>
 
-        {/* Recent reports + Calendar */}
+        {/* Main Panel Grid */}
         <div className="rc-layout">
-          {/* Recent Reports */}
+          {/* Recent Reports Table */}
           <div className="rc-panel">
             <h2 className="rc-panel-title">RECENT REPORTS</h2>
             <div className="report-table-header">
+              <div></div>
               <span>Report</span>
-              <span>Due Date</span>
-              <span>Status</span>
+              <span className="header-due">Due Date</span>
+              <span className="header-status">Status</span>
+              <div></div>
             </div>
             <div className="report-list">
               {reports.map((report) => (
@@ -245,7 +226,7 @@ export default function ReportCompliance() {
             </a>
           </div>
 
-          {/* Calendar */}
+          {/* Calendar Widget */}
           <div className="rc-panel">
             <div className="calendar-header">
               <h2 className="calendar-title">{monthLabel}</h2>
@@ -293,7 +274,7 @@ export default function ReportCompliance() {
               })}
             </div>
 
-            {/* Reports due on selected date */}
+            {/* Reports Due Section */}
             <div className="selected-date-section">
               <h3 className="selected-date-title">Reports Due on Selected Date</h3>
               {selectedReports.length === 0 ? (
@@ -336,7 +317,7 @@ export default function ReportCompliance() {
           </div>
         </div>
 
-        {/* Stay Compliant banner */}
+        {/* Banner */}
         <div className="rc-banner">
           <div className="rc-banner-left">
             <Info size={22} className="rc-banner-icon" />

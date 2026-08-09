@@ -90,7 +90,7 @@
 .rc-stat-sub.blue { color: #6b7280; }
 
 /* ---------------------------------------------------------------------- */
-/* Two column layout                                                      */
+/* Two column layout                                                     */
 /* ---------------------------------------------------------------------- */
 
 .rc-layout {
@@ -128,13 +128,22 @@
 
 .report-table-header {
   display: grid;
-  grid-template-columns: 1fr auto auto 32px;
-  gap: 16px;
-  padding: 0 0 10px 60px;
+  grid-template-columns: 44px 1fr 140px 110px 32px;
+  align-items: center;
+  gap: 14px;
+  padding: 0 0 10px 0;
   font-size: 0.8rem;
   color: #6b7280;
   border-bottom: 1px solid #f3f4f6;
   margin-bottom: 4px;
+}
+
+.header-due {
+  text-align: right;
+}
+
+.header-status {
+  text-align: center;
 }
 
 .report-list {
@@ -144,7 +153,7 @@
 
 .report-row {
   display: grid;
-  grid-template-columns: 44px 1fr auto auto 32px;
+  grid-template-columns: 44px 1fr 140px 110px 32px;
   align-items: center;
   gap: 14px;
   padding: 16px 0;
@@ -225,6 +234,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;
+  text-align: center;
 }
 
 .status-pill.danger { background: #fee2e2; color: #dc2626; }
