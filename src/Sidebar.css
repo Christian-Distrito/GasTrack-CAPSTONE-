@@ -29,7 +29,7 @@
 }
 
 .sidebar-logo-img {
-  max-width: 220px; /* Adjust size based on image dimensions */
+  max-width: 150px; /* Adjust size based on image dimensions */
   height: auto;
   object-fit: contain;
 }
@@ -42,7 +42,7 @@
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin-top: -30px;
+  margin-top: -5px;
   padding-bottom: 8px;
 }
 

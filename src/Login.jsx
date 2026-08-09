@@ -1,18 +1,14 @@
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User, Lock } from "lucide-react";
 import navLogo from "./assets/logo-login.png";
-import cardLogo from "./assets/logo.png";
+import cardLogo from "./assets/logo-card.png";
 import "./Login.css";
-
-// ---------------------------------------------------------------------------
-// Top navigation bar
-// ---------------------------------------------------------------------------
 
 function TopNav() {
   return (
     <header className="login-nav">
       <div className="login-nav-brand">
-        <img src={navLogo} alt="GasTrack" className="login-nav-logo" />
+        <img src={navLogo} alt="GasTrack Logo" className="login-nav-logo" />
       </div>
       <nav className="login-nav-links">
         <a href="#home" className="login-nav-link active">Home</a>
@@ -23,14 +19,6 @@ function TopNav() {
     </header>
   );
 }
-
-// ---------------------------------------------------------------------------
-// Main Login component
-//
-// Props:
-// - onLogin: ({ username, password }) => void   called after basic validation
-//   passes; wire this up to your real auth call.
-// ---------------------------------------------------------------------------
 
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -48,8 +36,6 @@ export default function Login({ onLogin }) {
     setError("");
     setIsSubmitting(true);
     try {
-      // Replace with your real authentication call, e.g.:
-      // const res = await fetch("/api/auth/login", { method: "POST", ... });
       if (onLogin) {
         await onLogin({ username, password });
       }
@@ -60,39 +46,39 @@ export default function Login({ onLogin }) {
     }
   };
 
-  const handleForgotPassword = () => {
-    // Hook this up to your forgot-password flow / route
-    console.log("Forgot password clicked");
-  };
-
   return (
     <div className="login-page">
       <TopNav />
 
-      <div className="login-content">
+      <main className="login-content">
         <div className="login-card">
-          <div className="login-card-logo">
-            <img src={cardLogo} alt="GasTrack" className="login-card-logo-img" />
-          </div>
+          {/* Fixed variable reference below */}
+          <img src={cardLogo} alt="GasTrack" className="login-card-logo-img" />
 
-          <p className="login-welcome">Welcome to GasTrack!</p>
+          <h2 className="login-welcome">Welcome to GasTrack!</h2>
           <p className="login-subtitle">Login to your account</p>
 
           <form className="login-form" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Username"
-              className="login-input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
-            />
+            {/* Username Input Group */}
+            <div className="input-field-group">
+              <User size={18} className="field-icon" />
+              <input
+                type="text"
+                placeholder="Username"
+                className="login-input"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
+              />
+            </div>
 
-            <div className="login-password-wrap">
+            {/* Password Input Group */}
+            <div className="input-field-group">
+              <Lock size={18} className="field-icon" />
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="login-input"
+                className="login-input has-toggle"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
@@ -109,16 +95,18 @@ export default function Login({ onLogin }) {
 
             {error && <p className="login-error">{error}</p>}
 
-            <button type="button" className="login-forgot" onClick={handleForgotPassword}>
-              Forgot your password?
-            </button>
+            <div className="forgot-wrap">
+              <button type="button" className="login-forgot">
+                Forgot your password?
+              </button>
+            </div>
 
             <button type="submit" className="login-submit" disabled={isSubmitting}>
               {isSubmitting ? "LOGGING IN..." : "LOGIN"}
             </button>
           </form>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
