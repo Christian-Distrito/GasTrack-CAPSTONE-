@@ -6,6 +6,7 @@ import PosTerminal from "./PosTerminal";
 import PaymentModal from "./PaymentModal";
 import Sales from "./Sales";
 import Users from "./Users";
+import Settings from "./Settings";
 import Inventory from "./Inventory";
 import Products from "./Products";
 import Restocking from "./Restocking";
@@ -33,7 +34,7 @@ const pages = {
   suppliers: Suppliers,
   data: Data,
   users: Users,
-  // settings: Settings,
+  settings: Settings,
   report: ReportCompliance,
   // orders: OrderAndDelivery,
 };
