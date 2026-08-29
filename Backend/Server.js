@@ -7,6 +7,7 @@ import productsRouter from "./Routes/products.js";
 import inventoryRouter from "./routes/inventory.js";
 import suppliersRouter from "./routes/suppliers.js";
 import salesRouter from "./routes/sales.js";
+import companiesRouter from "./Routes/companies.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use("/api/companies", companiesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/inventory", inventoryRouter);
