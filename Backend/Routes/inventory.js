@@ -60,6 +60,64 @@ router.get("/", requireAuth, async (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// GET /api/v1/inventory/restock-suggestions
+// Rule-based restock logic — no ML yet, just stock_on_hand vs reorder_level.
+// Matches the shape Dashboard.jsx's "Restock Suggestion" panel expects
+// (name, stock, suggest, status: 'Critical' | 'Low Stock').
+//
+// THIS IS A DELIBERATE PLACEHOLDER. Once real sales history exists and an
+// XGBoost model is trained (see ml/ folder), swap this query for one that
+// reads from the `restock_recommendation` table instead — that table is
+// exactly where the Python prediction script should write its output.
+// The frontend/route contract (this JSON shape) doesn't need to change,
+// only where the numbers come from.
+//
+// Thresholds used here:
+//   stock <= reorder_level * 0.5  -> "Critical"
+//   stock <= reorder_level        -> "Low Stock"
+//   stock > reorder_level         -> not returned (no action needed)
+// Suggested restock quantity = enough to reach 2x reorder_level.
+// ---------------------------------------------------------------------------
+
+router.get("/restock-suggestions", requireAuth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `
+      SELECT p.product_id, p.product_name, p.reorder_level,
+             COALESCE(SUM(i.stock_on_hand), 0) AS total_stock
+      FROM product p
+      JOIN inventory i ON i.product_id = p.product_id
+      JOIN warehouse w ON w.warehouse_id = i.warehouse_id
+      WHERE w.company_id = $1 AND p.status = 'Active'
+      GROUP BY p.product_id, p.product_name, p.reorder_level
+      HAVING COALESCE(SUM(i.stock_on_hand), 0) <= p.reorder_level
+      ORDER BY (COALESCE(SUM(i.stock_on_hand), 0)::float / NULLIF(p.reorder_level, 0)) ASC
+      `,
+      [req.user.company_id]
+    );
+
+    const suggestions = result.rows.map((row) => {
+      const stock = Number(row.total_stock);
+      const reorderLevel = row.reorder_level;
+      const isCritical = stock <= reorderLevel * 0.5;
+
+      return {
+        productId: row.product_id,
+        name: row.product_name,
+        stock,
+        suggest: Math.max(reorderLevel * 2 - stock, 0),
+        status: isCritical ? "Critical" : "Low Stock",
+      };
+    });
+
+    res.json(suggestions);
+  } catch (err) {
+    console.error("GET /api/v1/inventory/restock-suggestions failed:", err.message);
+    res.status(500).json({ error: "Failed to compute restock suggestions" });
+  }
+});
+
+// ---------------------------------------------------------------------------
 // POST /api/inventory/adjust
 // Adjusts stock for a product at a warehouse AND writes an audit record to
 // inventory_transaction — never update inventory.stock_on_hand directly,
