@@ -8,6 +8,7 @@ import inventoryRouter from "./routes/inventory.js";
 import suppliersRouter from "./routes/suppliers.js";
 import salesRouter from "./routes/sales.js";
 import companiesRouter from "./Routes/companies.js";
+import createAccountRouter from "./Routes/createAccount.js";
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ app.use("/api/products", productsRouter);
 app.use("/api/inventory", inventoryRouter);
 app.use("/api/suppliers", suppliersRouter);
 app.use("/api/sales", salesRouter);
+app.use("/api/auth/customer", createAccountRouter); // Register new customer accounts
+
 
 app.get("/", (req, res) => {
   res.send("GasTrack API is running.");
