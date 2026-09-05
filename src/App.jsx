@@ -38,12 +38,13 @@ const pages = {
   users: Users,
   settings: Settings,
   report: ReportCompliance,
-  // orders: OrderAndDelivery,
+  orders: OrderAndDelivery,
 };
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeItem, setActiveItem] = useState("dashboard");
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const handleLogin = async ({ username, password }) => {
     // Replace this with your real authentication call, e.g.:
@@ -57,6 +58,12 @@ export default function App() {
     setIsAuthenticated(true);
   };
 
+  const handleLogout = () => {
+    setIsLogoutModalOpen(false);
+    setIsAuthenticated(false);
+    setActiveItem("dashboard");
+  };
+
   if (!isAuthenticated) {
     return <Login onLogin={handleLogin} />;
   }
@@ -65,10 +72,19 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar activeItem={activeItem} onNavigate={setActiveItem} />
+      <Sidebar
+        activeItem={activeItem}
+        onNavigate={setActiveItem}
+        onProfileClick={() => setIsLogoutModalOpen(true)}
+      />
       <main className="app-content">
         <ActivePage />
       </main>
+      <LogoutModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onLogout={handleLogout}
+      />
     </div>
   );
 }
