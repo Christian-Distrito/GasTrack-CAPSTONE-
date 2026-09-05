@@ -9,7 +9,7 @@
 body {
   background: #f4f6fa;
   color: #1e293b;
-  padding: 20px;
+  padding: 32px 40px;
 }
 
 .order-delivery-page {
@@ -18,115 +18,102 @@ body {
 }
 
 .page-title {
-  font-size: 26px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
   margin-bottom: 24px;
-  color: #0f172a;
+  color: #212529;
 }
 
 .panel {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  padding: 20px 24px 28px;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
 }
 
 .panel-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 18px;
-}
-.panel-header h2 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #0f172a;
 }
 
 /* ─── Tabs ────────────────────────────────────────────────── */
 .tabs {
   display: flex;
-  gap: 4px;
-  border-bottom: 1px solid #e9edf4;
-  margin-bottom: 22px;
+  gap: 24px;
+  border-bottom: none;
+  margin-bottom: 28px;
 }
 .tab {
-  padding: 10px 18px;
+  padding: 8px 4px;
   border: none;
   background: transparent;
-  font-weight: 500;
-  font-size: 14px;
-  color: #64748b;
+  font-weight: 600;
+  font-size: 15px;
+  color: #4b5563;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: 0.15s;
 }
-.tab:hover { color: #0f172a; }
+.tab:hover { color: #1e40af; }
 .tab.active {
-  color: #1d4ed8;
-  border-bottom-color: #1d4ed8;
+  color: #1e40af;
+  border-bottom-color: #1e40af;
 }
 
 /* ─── Filters ────────────────────────────────────────────── */
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 24px;
   align-items: center;
 }
 
 .search-box {
   position: relative;
-  flex: 1 1 220px;
+  flex: 1 1 300px;
+  max-width: 400px;
 }
 .search-box input {
   width: 100%;
-  padding: 8px 36px 8px 14px;
+  padding: 10px 16px; /* Adjusted padding since icon is removed */
   border: 1px solid #dce1eb;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 14px;
-  background: #f8fafc;
+  background: #ffffff;
   transition: 0.2s;
 }
 .search-box input:focus {
   outline: none;
   border-color: #3b82f6;
-  background: #fff;
-}
-.search-box .icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #94a3b8;
-  pointer-events: none;
 }
 
 .filters select {
-  padding: 8px 30px 8px 14px;
+  padding: 10px 36px 10px 16px;
   border: 1px solid #dce1eb;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 14px;
-  background: #f8fafc;
-  color: #1e293b;
+  background: #ffffff;
+  color: #64748b;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 14px center;
   cursor: pointer;
-  min-width: 150px;
+  min-width: 200px;
 }
 .filters select:focus {
   outline: none;
   border-color: #3b82f6;
-  background-color: #fff;
 }
 
 /* ─── Tables ──────────────────────────────────────────────── */
 .table-wrap {
   overflow-x: auto;
-  margin-top: 4px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 table {
   width: 100%;
@@ -134,43 +121,46 @@ table {
   font-size: 14px;
 }
 th {
-  text-align: left;
-  padding: 12px 12px 10px 12px;
+  text-align: center;
+  padding: 16px 12px;
   font-weight: 600;
-  color: #475569;
-  border-bottom: 1px solid #e9edf4;
-  background: #f8fafc;
+  color: #ffffff;
+  background: #233857;
+  border-bottom: none;
 }
 td {
-  padding: 12px;
+  text-align: center;
+  padding: 16px 12px;
   border-bottom: 1px solid #f1f5f9;
   vertical-align: middle;
+  color: #1e293b;
 }
 tr:hover td { background: #fafcff; }
 
+/* ─── Actions ─────────────────────────────────────────────── */
 .actions {
   display: flex;
-  gap: 8px;
+  gap: 12px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 .action-btn {
   background: none;
   border: none;
-  font-size: 16px;
   cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 6px;
   transition: 0.15s;
   line-height: 1;
-  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .action-btn:hover {
-  background: #e9edf4;
+  opacity: 0.7;
 }
-.act-view { color: #3b82f6; }
-.act-edit { color: #22c55e; }
-.act-print { color: #000000; }
-.act-delete { color: #ef4444; }
+.act-view { color: #eab308; } /* Yellow */
+.act-edit { color: #22c55e; } /* Green */
+.act-print { color: #4b5563; } /* Dark Gray */
+.act-delete { color: #ef4444; } /* Red */
 
 .empty-state {
   padding: 30px 0;
@@ -179,12 +169,12 @@ tr:hover td { background: #fafcff; }
   font-size: 14px;
 }
 
-/* ─── Badges ───────────────────────────────────────────────── */
+/* ─── Pill Badges (Restored & Updated to match Image) ─────── */
 .badge {
   display: inline-block;
-  padding: 2px 12px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 4px 16px;
+  border-radius: 20px; /* Gives the pill shape */
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.3px;
   background: #e9edf4;
@@ -193,14 +183,14 @@ tr:hover td { background: #fafcff; }
 .badge-yellow { background: #fef3c7; color: #92400e; }
 .badge-blue   { background: #dbeafe; color: #1e40af; }
 .badge-green  { background: #d1fae5; color: #065f46; }
-.badge-red    { background: #fee2e2; color: #991b1b; }
+.badge-red    { background: #ffe4e6; color: #9f1239; } /* Updated Pink/Red for Unpaid */
 .badge-gray   { background: #e2e8f0; color: #475569; }
 
 /* ─── Buttons ──────────────────────────────────────────────── */
 .btn {
   padding: 8px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
@@ -241,7 +231,7 @@ tr:hover td { background: #fafcff; }
 
 .modal {
   background: #fff;
-  border-radius: 16px;
+  border-radius: 12px;
   max-width: 640px;
   width: 100%;
   max-height: 90vh;
@@ -281,7 +271,7 @@ tr:hover td { background: #fafcff; }
 .form-row textarea {
   padding: 8px 12px;
   border: 1px solid #dce1eb;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 14px;
   background: #f8fafc;
   transition: 0.2s;
@@ -380,13 +370,12 @@ tr:hover td { background: #fafcff; }
 
 /* ─── Responsive ───────────────────────────────────────────── */
 @media (max-width: 768px) {
-  body { padding: 10px; }
-  .panel { padding: 16px; }
+  body { padding: 16px; }
   .filters {
     flex-direction: column;
     align-items: stretch;
   }
-  .search-box { flex: 1 1 auto; }
+  .search-box { flex: 1 1 auto; max-width: 100%; }
   .filters select { width: 100%; }
   .modal {
     padding: 20px;
