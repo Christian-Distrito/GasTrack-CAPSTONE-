@@ -1,251 +1,227 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./Settings.css";
 
-// Sidebar navigation items (same as before, with Settings active)
-const NAV_ITEMS = [
-  { label: "Dashboard", icon: "📊" },
-  { label: "POS Terminal", icon: "🖥️" },
-  { label: "Inventory", icon: "📦" },
-  { label: "Products", icon: "🛢️" },
-  { label: "Sales", icon: "💵" },
-  { label: "Restocking", icon: "🔁" },
-  { label: "Suppliers", icon: "🚚" },
-  { label: "Data", icon: "🗄️" },
-  { label: "Users", icon: "👥" },
-  { label: "Settings", icon: "⚙️", active: true },
-  { label: "Report and Compliance", icon: "📋" },
-  { label: "Order and Delivery", icon: "🚛" },
-];
-
 export default function Settings() {
-  // --- Business Profile ---
-  const [fullName, setFullName] = useState("GasTrack Inc.");
-  const [contactEmail, setContactEmail] = useState("info@gastrack.com");
-  const [address, setAddress] = useState("123 Main St, City");
-  const [phone, setPhone] = useState("+63 912 345 6789");
+  const [taxEnabled, setTaxEnabled] = useState(true);
+  
+  // State and ref for handling the logo upload
+  const [logoPreview, setLogoPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
-  // --- Financial & Tax Rules ---
-  const [taxRate, setTaxRate] = useState(12);
-  const [currencySelector, setCurrencySelector] = useState("2 decimal standard");
-  const [taxEnable, setTaxEnable] = useState(true);
+  // Trigger the hidden file input when the dropzone is clicked
+  const handleDropzoneClick = () => {
+    fileInputRef.current.click();
+  };
 
-  // --- Receipt and POS Output ---
-  const [receiptHeader, setReceiptHeader] = useState("Thank you for your purchase!");
-  const [footerMessage, setFooterMessage] = useState("Visit us again!");
-  const [showLogo, setShowLogo] = useState(true);
-  const [printSize, setPrintSize] = useState("Medium");
-  const [showTaxBreakdown, setShowTaxBreakdown] = useState(true);
-
-  // --- System Behavior Rules ---
-  const [autoLogout, setAutoLogout] = useState(30);
-  const [dateFormat, setDateFormat] = useState("YYYY-MM-DD");
-  const [timezone, setTimezone] = useState("Local");
-  const [language, setLanguage] = useState("English");
-  const [theme, setTheme] = useState("Light");
-
-  // Toast / save handlers
-  const [toastMsg, setToastMsg] = useState("");
-
-  function showToast(msg) {
-    setToastMsg(msg);
-    clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => setToastMsg(""), 2500);
-  }
-
-  function handleSave(section) {
-    showToast(`Settings for "${section}" saved successfully.`);
-  }
+  // Handle the file selection and generate a preview URL
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setLogoPreview(previewUrl);
+    }
+  };
 
   return (
-    <div className="app">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="brand">
-          <span className="brand-icon">🔥</span>
-          <span className="brand-name">GasTrack</span>
+    <div className="settings-page">
+      <h1 className="page-title">Settings</h1>
+
+      {/* ─── BUSINESS PROFILE ─── */}
+      <div className="settings-card">
+        <h2 className="card-title">Business Profile</h2>
+        <div className="business-profile-grid">
+          <div className="input-column">
+            <div className="form-group">
+              <label>Full name</label>
+              <input type="text" className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Address</label>
+              <input type="text" className="form-control" />
+            </div>
+          </div>
+          
+          <div className="input-column">
+            <div className="form-group">
+              <label>Contact email</label>
+              <input type="email" className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Phone</label>
+              <input type="text" className="form-control" />
+            </div>
+          </div>
+
+          <div className="logo-upload-wrapper">
+            {/* Hidden file input */}
+            <input 
+              type="file" 
+              accept="image/*" 
+              ref={fileInputRef} 
+              onChange={handleFileChange} 
+              style={{ display: "none" }} 
+            />
+            
+            {/* Dropzone Area */}
+            <div className="logo-dropzone" onClick={handleDropzoneClick}>
+              {logoPreview ? (
+                <img src={logoPreview} alt="Logo Preview" className="logo-preview-img" />
+              ) : (
+                <>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginBottom: "8px"}}>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                  </svg>
+                  <span className="choose-file-btn">Choose file</span>
+                </>
+              )}
+            </div>
+            <span className="upload-label">Upload logo</span>
+          </div>
         </div>
-
-        <div className="sidebar-user">
-          <span className="avatar">👤</span>
-          <span className="bell">
-            🔔<span className="bell-dot" />
-          </span>
+        <div className="card-actions">
+          <button className="btn btn-primary">Save</button>
         </div>
+      </div>
 
-        <div className="sidebar-search">
-          <input type="text" placeholder="Search for..." />
-          <span className="icon">🔍</span>
+      {/* ─── FINANCIAL & TAX RULES ─── */}
+      <div className="settings-card">
+        <h2 className="card-title">Financial & Tax Rules</h2>
+        <div className="grid-2-col">
+          <div className="input-column">
+            <div className="form-group">
+              <label>Tax rate(%)</label>
+              <input type="text" className="form-control" />
+            </div>
+            <div className="toggle-group" style={{ marginTop: "8px" }}>
+              <label>Tax enable</label>
+              <label className="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  checked={taxEnabled} 
+                  onChange={(e) => setTaxEnabled(e.target.checked)} 
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div className="input-column">
+            <div className="form-group">
+              <label>Currency selector</label>
+              <input type="text" className="form-control" />
+            </div>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input type="checkbox" /> Round up
+              </label>
+              <label className="checkbox-label">
+                <input type="checkbox" /> Round down
+              </label>
+              <label className="checkbox-label">
+                <input type="checkbox" /> 2 decimal standard
+              </label>
+            </div>
+          </div>
         </div>
-
-        <nav className="nav">
-          {NAV_ITEMS.map(({ label, icon, active }) => (
-            <a key={label} href="#" onClick={(e) => e.preventDefault()} className={`nav-item ${active ? "active" : ""}`}>
-              <span className="nav-icon">{icon}</span>
-              {label}
-            </a>
-          ))}
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <main className="main settings-main">
-        <h1 className="page-title">Settings</h1>
-
-        <div className="settings-container">
-          {/* --- BUSINESS PROFILE --- */}
-          <section className="settings-section">
-            <h2>Business Profile</h2>
-            <div className="settings-grid">
-              <div className="form-group">
-                <label>Full name</label>
-                <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Contact email</label>
-                <input type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Address</label>
-                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Phone</label>
-                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
-              </div>
-            </div>
-
-            <div className="settings-actions">
-              <button className="btn btn-outline">Upload logo</button>
-              <button className="btn btn-primary" onClick={() => handleSave("Business Profile")}>Save</button>
-            </div>
-          </section>
-
-          <hr className="section-divider" />
-
-          {/* --- FINANCIAL & TAX RULES --- */}
-          <section className="settings-section">
-            <h2>Financial &amp; Tax Rules</h2>
-            <div className="settings-grid">
-              <div className="form-group">
-                <label>Tax rate (%)</label>
-                <input type="number" value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} />
-              </div>
-              <div className="form-group">
-                <label>Currency selector*</label>
-                <select value={currencySelector} onChange={(e) => setCurrencySelector(e.target.value)}>
-                  <option>Round up</option>
-                  <option>Round down</option>
-                  <option>2 decimal standard</option>
-                </select>
-              </div>
-              <div className="form-group checkbox-group">
-                <label>
-                  <input type="checkbox" checked={taxEnable} onChange={(e) => setTaxEnable(e.target.checked)} />
-                  Tax enable
-                </label>
-              </div>
-            </div>
-
-            <div className="settings-actions">
-              <button className="btn btn-outline">Test calculation</button>
-              <button className="btn btn-primary" onClick={() => handleSave("Financial & Tax Rules")}>Save</button>
-            </div>
-          </section>
-
-          <hr className="section-divider" />
-
-          {/* --- RECEIPT AND POS OUTPUT --- */}
-          <section className="settings-section">
-            <h2>Receipt and POS Output</h2>
-            <div className="settings-grid">
-              <div className="form-group">
-                <label>Receipt header text</label>
-                <input type="text" value={receiptHeader} onChange={(e) => setReceiptHeader(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Footer message</label>
-                <input type="text" value={footerMessage} onChange={(e) => setFooterMessage(e.target.value)} />
-              </div>
-              <div className="form-group checkbox-group">
-                <label>
-                  <input type="checkbox" checked={showLogo} onChange={(e) => setShowLogo(e.target.checked)} />
-                  Show logo
-                </label>
-              </div>
-              <div className="form-group">
-                <label>Print Size</label>
-                <select value={printSize} onChange={(e) => setPrintSize(e.target.value)}>
-                  <option>Small</option>
-                  <option>Medium</option>
-                  <option>Large</option>
-                </select>
-              </div>
-              <div className="form-group checkbox-group">
-                <label>
-                  <input type="checkbox" checked={showTaxBreakdown} onChange={(e) => setShowTaxBreakdown(e.target.checked)} />
-                  Show tax breakdown
-                </label>
-              </div>
-            </div>
-
-            <div className="settings-actions">
-              <button className="btn btn-outline">Print text receipt</button>
-              <button className="btn btn-primary" onClick={() => handleSave("Receipt and POS Output")}>Save</button>
-            </div>
-          </section>
-
-          <hr className="section-divider" />
-
-          {/* --- SYSTEM BEHAVIOR RULES --- */}
-          <section className="settings-section">
-            <h2>System Behavior Rules</h2>
-            <div className="settings-grid">
-              <div className="form-group">
-                <label>Auto logout timer (minutes)</label>
-                <input type="number" value={autoLogout} onChange={(e) => setAutoLogout(Number(e.target.value))} />
-              </div>
-              <div className="form-group">
-                <label>Date format</label>
-                <select value={dateFormat} onChange={(e) => setDateFormat(e.target.value)}>
-                  <option>YYYY-MM-DD</option>
-                  <option>DD/MM/YYYY</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>System timezone</label>
-                <select value={timezone} onChange={(e) => setTimezone(e.target.value)}>
-                  <option>Local</option>
-                  <option>UTC+0</option>
-                  <option>GMT+1</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Language</label>
-                <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-                  <option>English</option>
-                  <option>Español</option>
-                  <option>Français</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Theme</label>
-                <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-                  <option>Light</option>
-                  <option>Dark</option>
-                  <option>System</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="settings-actions">
-              <button className="btn btn-primary" onClick={() => handleSave("System Behavior Rules")}>Save</button>
-            </div>
-          </section>
+        <div className="card-actions">
+          <button className="btn btn-success">Test calculation</button>
+          <button className="btn btn-primary">Save</button>
         </div>
-      </main>
+      </div>
 
-      {/* Toast notification */}
-      {toastMsg && <div className="toast show">{toastMsg}</div>}
+      {/* ─── RECEIPT AND POS OUTPUT ─── */}
+      <div className="settings-card">
+        <h2 className="card-title">Receipt and POS Output</h2>
+        <div className="grid-2-col">
+          <div className="input-column">
+            <div className="form-group">
+              <label>Receipt header text</label>
+              <input type="text" className="form-control" />
+            </div>
+            <div className="checkbox-group" style={{ marginTop: "8px" }}>
+              <label className="checkbox-label">
+                <input type="checkbox" /> Show logo
+              </label>
+              <label className="checkbox-label">
+                <input type="checkbox" /> Show tax breakdown
+              </label>
+            </div>
+          </div>
+
+          <div className="input-column">
+            <div className="form-group">
+              <label>Footer message</label>
+              <input type="text" className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Print Size</label>
+              <select className="form-control">
+                <option value=""></option>
+                <option value="58mm">58mm</option>
+                <option value="80mm">80mm</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="card-actions">
+          <button className="btn btn-success">Print text receipt</button>
+          <button className="btn btn-primary">Save</button>
+        </div>
+      </div>
+
+      {/* ─── SYSTEM BEHAVIOR RULES ─── */}
+      <div className="settings-card">
+        <h2 className="card-title">System Behavior Rules</h2>
+        <div className="grid-3-col">
+          <div className="input-column">
+            <div className="form-group">
+              <label>Auto logout timer (minutes)</label>
+              <input type="text" className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>System timezone</label>
+              <select className="form-control">
+                <option value=""></option>
+                <option value="UTC">UTC</option>
+                <option value="PST">PST</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="input-column">
+            <div className="form-group">
+              <label>Date format</label>
+              <input type="text" className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Language</label>
+              <select className="form-control">
+                <option value=""></option>
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="input-column" style={{ justifyContent: "space-between" }}>
+            <div className="form-group">
+              <label>Theme</label>
+              <select className="form-control">
+                <option value=""></option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+            
+            <div className="card-actions-inline">
+              <button className="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
