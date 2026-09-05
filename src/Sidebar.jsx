@@ -44,7 +44,7 @@ const navItems = [
 // Sidebar component
 // ---------------------------------------------------------------------------
 
-export default function Sidebar({ activeItem, onNavigate, notificationCount = 9 }) {
+export default function Sidebar({ activeItem, onNavigate, onProfileClick, notificationCount = 9 }) {
   // Falls back to internal state if the parent doesn't control activeItem
   const [internalActive, setInternalActive] = useState("dashboard");
   const current = activeItem ?? internalActive;
