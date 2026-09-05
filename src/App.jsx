@@ -15,6 +15,8 @@ import Suppliers from "./Suppliers";
 import "./App.css";
 import ReportCompliance from "./ReportCompliance";
 import Data from "./Data";
+import OrderAndDelivery from "./OrderAndDelivery";
+import LogoutModal from "./LogoutModal";
 
 // ---------------------------------------------------------------------------
 // App shell — Sidebar on the left, active page on the right.
