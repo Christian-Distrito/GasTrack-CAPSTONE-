@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+const JWT_SECRET = process.env.JWT_SECRET || "gastrack_fallback_secret_key_2026";
+
 // ---------------------------------------------------------------------------
 // Protects a route — requires a valid "Authorization: Bearer <token>" header.
 // Attaches the decoded payload (user_id, role, company_id) to req.user.
@@ -15,7 +17,7 @@ export function requireAuth(req, res, next) {
   const token = authHeader.split(" ")[1];
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET);
     req.user = payload;
     next();
   } catch (err) {

@@ -6,11 +6,10 @@ import { pool } from "../db.js";
 const router = express.Router();
 
 const SALT_ROUNDS = 10;
+const JWT_SECRET = process.env.JWT_SECRET || "gastrack_fallback_secret_key_2026";
 
 // ---------------------------------------------------------------------------
 // POST /api/auth/login
-// Body: { email, password }
-// Returns: { token, user: { user_id, first_name, last_name, email, role, company_id } }
 // ---------------------------------------------------------------------------
 
 router.post("/login", async (req, res) => {
@@ -33,8 +32,6 @@ router.post("/login", async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      // Same error for "no such user" and "wrong password" —
-      // don't reveal which one it was, that's a login-enumeration risk.
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
@@ -51,40 +48,35 @@ router.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       {
+        userId: user.user_id,
         user_id: user.user_id,
+        companyId: user.company_id,
         company_id: user.company_id,
         role: user.role_name,
       },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "8h" }
     );
 
     res.json({
       token,
       user: {
-        user_id: user.user_id,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        userId: user.user_id,
+        firstName: user.first_name,
+        lastName: user.last_name,
         email: user.email,
         role: user.role_name,
-        company_id: user.company_id,
+        companyId: user.company_id,
       },
     });
   } catch (err) {
-    console.error("POST /api/auth/login failed:", err.message);
-    res.status(500).json({ error: "Login failed" });
+    console.error("POST /api/auth/login failed:", err);
+    res.status(500).json({ error: err.message || "Login failed" });
   }
 });
 
 // ---------------------------------------------------------------------------
 // POST /api/auth/register-company
-// Creates a new company AND its first Admin account together, in one
-// transaction — matches the "Register LPG Company" button on the login page.
-//
-// Body: {
-//   companyName, dtiRegNo, doeNo, primaryBranch, address,
-//   adminFirstName, adminLastName, adminEmail, adminPassword
-// }
 // ---------------------------------------------------------------------------
 
 router.post("/register-company", async (req, res) => {
@@ -143,10 +135,9 @@ router.post("/register-company", async (req, res) => {
     console.error("POST /api/auth/register-company failed:", err.message);
 
     if (err.code === "23505") {
-      // unique_violation — duplicate DTI reg no, company name, or email
       return res.status(409).json({ error: "Company or email already registered" });
     }
-    res.status(500).json({ error: "Registration failed" });
+    res.status(500).json({ error: err.message || "Registration failed" });
   } finally {
     client.release();
   }
