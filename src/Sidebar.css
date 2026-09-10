@@ -41,9 +41,53 @@
 .sidebar-top-icons {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 16px;
   margin-top: -5px;
   padding-bottom: 8px;
+}
+
+.profile-menu-wrapper {
+  position: relative;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 150px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  padding: 8px;
+  z-index: 5;
+}
+
+.profile-dropdown-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.profile-dropdown-item:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.profile-dropdown-icon {
+  color: #6b7280;
 }
 
 .icon-circle {
