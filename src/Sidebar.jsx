@@ -15,6 +15,7 @@ import {
   Search,
   Bell,
   UserCircle,
+  LogOut,
 } from "lucide-react";
 
 // Import your custom logo image
@@ -47,6 +48,7 @@ const navItems = [
 export default function Sidebar({ activeItem, onNavigate, onProfileClick, notificationCount = 9 }) {
   // Falls back to internal state if the parent doesn't control activeItem
   const [internalActive, setInternalActive] = useState("dashboard");
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const current = activeItem ?? internalActive;
 
   const handleClick = (id) => {
@@ -54,6 +56,23 @@ export default function Sidebar({ activeItem, onNavigate, onProfileClick, notifi
       onNavigate(id);
     } else {
       setInternalActive(id);
+    }
+  };
+
+  const handleProfileSelect = (id) => {
+    setIsProfileDropdownOpen(false);
+
+    if (id === "profile") {
+      if (onNavigate) {
+        onNavigate("settings");
+      } else {
+        setInternalActive("settings");
+      }
+      return;
+    }
+
+    if (id === "logout" && onProfileClick) {
+      onProfileClick();
     }
   };
 
@@ -66,9 +85,39 @@ export default function Sidebar({ activeItem, onNavigate, onProfileClick, notifi
 
       {/* Avatar + notification bell */}
       <div className="sidebar-top-icons">
-        <button type="button" className="icon-circle" aria-label="Profile">
-          <UserCircle size={20} />
-        </button>
+        <div className="profile-menu-wrapper">
+          <button
+            type="button"
+            className="icon-circle"
+            aria-label="Profile"
+            aria-expanded={isProfileDropdownOpen}
+            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+          >
+            <UserCircle size={20} />
+          </button>
+
+          {isProfileDropdownOpen && (
+            <div className="profile-dropdown">
+              <button
+                type="button"
+                className="profile-dropdown-item"
+                onClick={() => handleProfileSelect("profile")}
+              >
+                <User size={16} className="profile-dropdown-icon" />
+                <span>Profile</span>
+              </button>
+              <button
+                type="button"
+                className="profile-dropdown-item"
+                onClick={() => handleProfileSelect("logout")}
+              >
+                <LogOut size={16} className="profile-dropdown-icon" />
+                <span>Log out</span>
+              </button>
+            </div>
+          )}
+        </div>
+
         <button type="button" className="icon-circle" aria-label="Notifications">
           <Bell size={18} />
           {notificationCount > 0 && (
