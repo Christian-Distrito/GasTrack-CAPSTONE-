@@ -12,6 +12,7 @@ import salesRouter from "./Routes/Sales.js";
 import ordersRouter from "./Routes/orders.js";
 import deliveriesRouter from "./Routes/deliveries.js";
 import posRouter from "./Routes/pos.js";
+import arRouter from "./Routes/ar.js";
 
 dotenv.config();
 
@@ -20,6 +21,10 @@ const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static 3D model binaries from /public/models
+app.use("/public", express.static("public"));
+
 
 const API_PREFIX = "/api/v1";
 
@@ -33,6 +38,7 @@ app.use(`${API_PREFIX}/sales`, salesRouter);
 app.use(`${API_PREFIX}/orders`, ordersRouter);
 app.use(`${API_PREFIX}/deliveries`, deliveriesRouter);
 app.use(`${API_PREFIX}/pos`, posRouter);
+app.use(`${API_PREFIX}/ar`, arRouter);
 
 app.get("/", (req, res) => {
     res.send("GasTrack API is running.");
