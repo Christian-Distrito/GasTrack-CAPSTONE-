@@ -1,16 +1,17 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+
 import authRouter from "./Routes/auth.js";
+import companiesRouter from "./Routes/companies.js";
 import usersRouter from "./Routes/users.js";
 import productsRouter from "./Routes/products.js";
 import inventoryRouter from "./Routes/inventory.js";
 import suppliersRouter from "./Routes/suppliers.js";
-import salesRouter from "./Routes/sales.js";
-import companiesRouter from "./Routes/companies.js";
-import createAccountRouter from "./Routes/createAccount.js";
+import salesRouter from "./Routes/Sales.js";
+import ordersRouter from "./Routes/orders.js";
+import deliveriesRouter from "./Routes/deliveries.js";
 import posRouter from "./Routes/pos.js";
-import dashboardRouter from "./Routes/dashboard.js";
 
 dotenv.config();
 
@@ -20,21 +21,23 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRouter);
-app.use("/api/companies", companiesRouter);
-app.use("/api/users", usersRouter);
-app.use("/api/products", productsRouter);
-app.use("/api/inventory", inventoryRouter);
-app.use("/api/suppliers", suppliersRouter);
-app.use("/api/sales", salesRouter);
-app.use("/api/auth/customer", createAccountRouter); // Register new customer accounts
-app.use("/api/pos", posRouter);
-app.use("/api/dashboard", dashboardRouter);
+const API_PREFIX = "/api/v1";
+
+app.use(`${API_PREFIX}/auth`, authRouter);
+app.use(`${API_PREFIX}/companies`, companiesRouter);
+app.use(`${API_PREFIX}/users`, usersRouter);
+app.use(`${API_PREFIX}/products`, productsRouter);
+app.use(`${API_PREFIX}/inventory`, inventoryRouter);
+app.use(`${API_PREFIX}/suppliers`, suppliersRouter);
+app.use(`${API_PREFIX}/sales`, salesRouter);
+app.use(`${API_PREFIX}/orders`, ordersRouter);
+app.use(`${API_PREFIX}/deliveries`, deliveriesRouter);
+app.use(`${API_PREFIX}/pos`, posRouter);
 
 app.get("/", (req, res) => {
-  res.send("GasTrack API is running.");
+    res.send("GasTrack API is running.");
 });
 
 app.listen(PORT, () => {
-  console.log(`GasTrack API listening on http://localhost:${PORT}`);
+    console.log(`GasTrack API listening on http://localhost:${PORT}`);
 });

@@ -11,16 +11,58 @@ function buildOrderNumber() {
   return `ORD-${datePart}-${tail}${random}`;
 }
 
+// Same pattern as buildOrderNumber(), used for the two new record types
+// this checkout now also creates.
+function buildSaleNumber() {
+  const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const tail = `${Date.now()}`.slice(-6);
+  const random = `${Math.floor(Math.random() * 1000)}`.padStart(3, "0");
+  return `SL-${datePart}-${tail}${random}`;
+}
+
+function buildDeliveryNumber() {
+  const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const tail = `${Date.now()}`.slice(-6);
+  const random = `${Math.floor(Math.random() * 1000)}`.padStart(3, "0");
+  return `DR-${datePart}-${tail}${random}`;
+}
+
+const VAT_RATE = 0.12;
+
 // ---------------------------------------------------------------------------
 // POST /api/pos/checkout
 // Processes point-of-sale orders and performs automatic stock deductions.
 // Accessible by Employee & Web POS operators.
+//
+// Extends the original version with the three steps it was missing:
+// creating the `sales` record (what actually shows up in Sales.jsx and the
+// sales.js GET endpoints), the `payment` record, and — for Delivery orders —
+// the `delivery` record (what PUT /api/v1/deliveries needs to exist before
+// it can update anything).
+//
+// New optional body fields on top of the original: discount (peso amount,
+// defaults to 0), amountCollected (for Cash — what the cashier actually
+// received), deliveryAddress (required if orderType is 'Delivery'),
+// deliveryCharge (defaults to 0). paymentMethod is now validated against
+// the real payment_method CHECK constraint, since it feeds an actual
+// payment row now instead of just being logged as inventory remarks text.
 // ---------------------------------------------------------------------------
 router.post("/checkout", requireAuth, async (req, res) => {
   const client = await pool.connect();
 
   try {
-    const { warehouseId, customerId, orderType, paymentMethod, remarks, items } = req.body;
+    const {
+      warehouseId,
+      customerId,
+      orderType,
+      paymentMethod,
+      remarks,
+      items,
+      discount = 0,
+      amountCollected,
+      deliveryAddress,
+      deliveryCharge = 0,
+    } = req.body;
     const userId = req.user?.user_id || req.user?.userId || req.user?.id;
     const companyId = req.user?.company_id || req.user?.companyId;
 
@@ -35,6 +77,17 @@ router.post("/checkout", requireAuth, async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({ error: "Authenticated user ID is missing from token." });
+    }
+
+    // paymentMethod now feeds a real `payment` row with a CHECK constraint,
+    // so it needs real validation (previously it was only logged as free
+    // text and didn't need to match anything specific).
+    const validPaymentMethods = ["Cash", "GCash", "Cheque", "Bank Transfer", "Credit"];
+    if (!paymentMethod || !validPaymentMethods.includes(paymentMethod)) {
+      return res.status(400).json({ error: `paymentMethod must be one of: ${validPaymentMethods.join(", ")}` });
+    }
+    if (finalOrderType === "Delivery" && !deliveryAddress) {
+      return res.status(400).json({ error: "deliveryAddress is required for Delivery orders." });
     }
 
     await client.query("BEGIN");
@@ -150,6 +203,50 @@ router.post("/checkout", requireAuth, async (req, res) => {
       );
     }
 
+    // ---- NEW: sales record — this is what makes the transaction show up
+    // in Sales.jsx / GET /api/v1/sales. VAT and discount are computed here
+    // since `orders.total_amount` (above) intentionally stays as the raw
+    // goods subtotal, matching order_details' own subtotal figures.
+    const vatableAmount = totalAmount - discount;
+    const vat = Math.round(vatableAmount * VAT_RATE * 100) / 100;
+    const finalTotal = Math.round((vatableAmount + vat) * 100) / 100;
+
+    const saleNo = buildSaleNumber();
+    const saleRes = await client.query(
+      `INSERT INTO sales (order_id, customer_id, user_id, sale_no, sales_discount, total_amount, remarks)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING sale_id, sale_date`,
+      [newOrder.order_id, customerId, userId, saleNo, discount, finalTotal, remarks || null]
+    );
+    const newSale = saleRes.rows[0];
+
+    // ---- NEW: payment record
+    const amountPaid = paymentMethod === "Cash" && amountCollected ? amountCollected : finalTotal;
+    await client.query(
+      `INSERT INTO payment (payment_type, sale_id, payment_method, amount_paid, remarks)
+       VALUES ('Sale', $1, $2, $3, $4)`,
+      [newSale.sale_id, paymentMethod, amountPaid, remarks || null]
+    );
+
+    // ---- NEW: delivery record, only for Delivery orders — this is what
+    // PUT /api/v1/deliveries/:deliveryId then has something real to update.
+    let delivery = null;
+    if (finalOrderType === "Delivery") {
+      const drNo = buildDeliveryNumber();
+      const deliveryRes = await client.query(
+        `INSERT INTO delivery (sale_id, dr_no, delivery_charge, delivery_address, delivery_status, remarks)
+         VALUES ($1, $2, $3, $4, 'Pending', $5)
+         RETURNING delivery_id`,
+        [newSale.sale_id, drNo, deliveryCharge, deliveryAddress, remarks || null]
+      );
+      delivery = {
+        deliveryId: deliveryRes.rows[0].delivery_id,
+        drNo,
+        status: "Pending",
+        address: deliveryAddress,
+      };
+    }
+
     await client.query("COMMIT");
 
     res.status(201).json({
@@ -163,6 +260,20 @@ router.post("/checkout", requireAuth, async (req, res) => {
         orderType: finalOrderType,
         itemCount: verifiedItems.length,
       },
+      sale: {
+        saleId: newSale.sale_id,
+        saleNo,
+        saleDate: newSale.sale_date,
+        discount,
+        vat,
+        totalAmount: finalTotal,
+      },
+      payment: {
+        method: paymentMethod,
+        amountPaid,
+        changeDue: paymentMethod === "Cash" ? Math.max((amountCollected || 0) - finalTotal, 0) : 0,
+      },
+      delivery,
     });
   } catch (err) {
     await client.query("ROLLBACK");
