@@ -2,6 +2,15 @@ import express from "express";
 import { pool } from "../db.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
 
+// =============================================================================
+// PRODUCTS API
+// Now includes `safetyStock` throughout (GET response, POST, PUT) — a real
+// buffer quantity distinct from reorderLevel. See patch_safety_stock.sql for
+// the schema change. Purely additive (new field only), so no version bump
+// was needed — existing callers that don't reference safetyStock are
+// unaffected.
+// =============================================================================
+
 const router = express.Router();
 
 // ---------------------------------------------------------------------------
@@ -35,7 +44,7 @@ router.get("/", requireAuth, async (req, res) => {
     const result = await pool.query(
       `
       SELECT p.product_id, p.product_name, p.unit, p.unit_price, p.cost_price,
-             p.reorder_level, p.image_url, p.status,
+             p.reorder_level, p.safety_stock, p.image_url, p.status,
              c.category, b.brand, s.supplier_name
       FROM product p
       JOIN category c ON c.category_id = p.category_id
@@ -58,6 +67,7 @@ router.get("/", requireAuth, async (req, res) => {
       price: Number(row.unit_price),
       costPrice: Number(row.cost_price),
       reorderLevel: row.reorder_level,
+      safetyStock: row.safety_stock,
       image: row.image_url,
       status: row.status,
     }));
@@ -113,6 +123,7 @@ router.post("/", requireAuth, requireRole("Admin", "Manager"), async (req, res) 
     unitPrice,
     costPrice,
     reorderLevel,
+    safetyStock,
     imageUrl,
   } = req.body;
 
@@ -122,10 +133,10 @@ router.post("/", requireAuth, requireRole("Admin", "Manager"), async (req, res) 
 
   try {
     const result = await pool.query(
-      `INSERT INTO product (product_name, category_id, brand_id, supplier_id, unit, unit_price, cost_price, reorder_level, image_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      `INSERT INTO product (product_name, category_id, brand_id, supplier_id, unit, unit_price, cost_price, reorder_level, safety_stock, image_url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING product_id, product_name`,
-      [productName, categoryId, brandId, supplierId, unit, unitPrice, costPrice, reorderLevel, imageUrl || null]
+      [productName, categoryId, brandId, supplierId, unit, unitPrice, costPrice, reorderLevel, safetyStock ?? 0, imageUrl || null]
     );
 
     res.status(201).json(result.rows[0]);
@@ -141,7 +152,7 @@ router.post("/", requireAuth, requireRole("Admin", "Manager"), async (req, res) 
 
 router.put("/:productId", requireAuth, requireRole("Admin", "Manager"), async (req, res) => {
   const { productId } = req.params;
-  const { productName, unitPrice, costPrice, reorderLevel, imageUrl, status } = req.body;
+  const { productName, unitPrice, costPrice, reorderLevel, safetyStock, imageUrl, status } = req.body;
 
   try {
     const result = await pool.query(
@@ -150,11 +161,12 @@ router.put("/:productId", requireAuth, requireRole("Admin", "Manager"), async (r
            unit_price = COALESCE($2, unit_price),
            cost_price = COALESCE($3, cost_price),
            reorder_level = COALESCE($4, reorder_level),
-           image_url = COALESCE($5, image_url),
-           status = COALESCE($6, status)
-       WHERE product_id = $7
-       RETURNING product_id, product_name, unit_price, cost_price, reorder_level, status`,
-      [productName, unitPrice, costPrice, reorderLevel, imageUrl, status, productId]
+           safety_stock = COALESCE($5, safety_stock),
+           image_url = COALESCE($6, image_url),
+           status = COALESCE($7, status)
+       WHERE product_id = $8
+       RETURNING product_id, product_name, unit_price, cost_price, reorder_level, safety_stock, status`,
+      [productName, unitPrice, costPrice, reorderLevel, safetyStock, imageUrl, status, productId]
     );
 
     if (result.rows.length === 0) {
