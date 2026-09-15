@@ -13,6 +13,7 @@ import ordersRouter from "./Routes/orders.js";
 import deliveriesRouter from "./Routes/deliveries.js";
 import posRouter from "./Routes/pos.js";
 import arRouter from "./Routes/ar.js";
+import mobileHomeRouter from "./Routes/mobileHome.js";
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(`${API_PREFIX}/orders`, ordersRouter);
 app.use(`${API_PREFIX}/deliveries`, deliveriesRouter);
 app.use(`${API_PREFIX}/pos`, posRouter);
 app.use(`${API_PREFIX}/ar`, arRouter);
+app.use(`${API_PREFIX}/mobile`, mobileHomeRouter);
 
 app.get("/", (req, res) => {
     res.send("GasTrack API is running.");
