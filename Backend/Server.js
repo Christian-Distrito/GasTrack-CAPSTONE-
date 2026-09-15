@@ -14,7 +14,7 @@ import deliveriesRouter from "./Routes/deliveries.js";
 import posRouter from "./Routes/pos.js";
 import restockRouter from "./Routes/restock.js";
 import arRouter from "./Routes/ar.js";
-
+import settingsRouter from "./Routes/settings.js";
 
 dotenv.config();
 
