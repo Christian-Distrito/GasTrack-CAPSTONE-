@@ -14,6 +14,7 @@ import deliveriesRouter from "./Routes/deliveries.js";
 import posRouter from "./Routes/pos.js";
 import restockRouter from "./Routes/restock.js";
 import arRouter from "./Routes/ar.js";
+import settingsRouter from "./Routes/settings.js";
 import mobileHomeRouter from "./Routes/mobileHome.js";
 import reportsRouter from "./Routes/reports.js";
 import dataRouter from "./Routes/data.js";
