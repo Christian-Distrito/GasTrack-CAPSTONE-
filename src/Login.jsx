@@ -63,7 +63,7 @@ export default function Login({ onLogin }) {
   const [currentView, setCurrentView] = useState("login");
 
   // Login Form State
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -96,15 +96,15 @@ export default function Login({ onLogin }) {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    if (!username.trim() || !password) {
-      setError("Please enter both username and password.");
+    if (!email.trim() || !password) {
+      setError("Please enter both email and password.");
       return;
     }
     setError("");
     setIsSubmitting(true);
     try {
       if (onLogin) {
-        await onLogin({ username, password });
+        await onLogin({ email, password });
       }
     } catch (err) {
       setError(err?.message || "Login failed. Please check your credentials.");
@@ -158,11 +158,11 @@ export default function Login({ onLogin }) {
                 <User size={18} className="field-icon" />
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder="Email"
                   className="login-input"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoComplete="username"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                 />
               </div>
 

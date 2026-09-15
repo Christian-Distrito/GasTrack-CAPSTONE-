@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Search,
   ChevronDown,
@@ -8,65 +8,68 @@ import {
   Trash2,
 } from "lucide-react";
 import AddProductModal from "./AddProductModal";
+import { apiRequest } from "./api";
 import "./Products.css";
 
-const initialProducts = [
-  {
-    productId: "P-001",
-    productName: "Gas LPG 2.7kg",
-    category: "Gasul LPG",
-    supplier: "ABC Company",
-    costPrice: "₱ 243.00",
-    status: "Active",
-  },
-  {
-    productId: "P-004",
-    productName: "Cylinder 2.7kg",
-    category: "Cylinder",
-    supplier: "XYZ Inc",
-    costPrice: "₱ 1,000.00",
-    status: "Active",
-  },
-  {
-    productId: "P-005",
-    productName: "POL Regulator",
-    category: "Accessories",
-    supplier: "DEF Company",
-    costPrice: "₱ 550.00",
-    status: "Active",
-  },
-  {
-    productId: "P-006",
-    productName: "LPG Hose",
-    category: "Accessories",
-    supplier: "XYZ Inc",
-    costPrice: "₱ 105.00",
-    status: "Active",
-  },
-  {
-    productId: "P-003",
-    productName: "Gasul LPG 11kg",
-    category: "Gasul LPG",
-    supplier: "ABC Company",
-    costPrice: "₱ 907.00",
-    status: "Active",
-  },
-];
+const pesoFormatter = new Intl.NumberFormat("en-PH", {
+  style: "currency",
+  currency: "PHP",
+});
 
 export default function Products() {
+  const [products, setProducts] = useState([]);
+  const [loadError, setLoadError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
 
-  // Modal State
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+
+  const productRows = useMemo(
+    () =>
+      products.map((product) => ({
+        productId: product.productId,
+        productName: product.name,
+        category: product.category,
+        supplier: product.supplier,
+        costPrice: pesoFormatter.format(Number(product.costPrice || 0)),
+        status: product.status,
+      })),
+    [products]
+  );
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (searchQuery.trim()) {
+      params.set("search", searchQuery.trim());
+    }
+    if (selectedCategory !== "All Categories") {
+      params.set("category", selectedCategory);
+    }
+    if (selectedStatus !== "All Status") {
+      params.set("status", selectedStatus);
+    }
+
+    const endpoint = params.toString() ? `/products?${params.toString()}` : "/products";
+
+    apiRequest(endpoint)
+      .then((data) => {
+        setProducts(data);
+        setLoadError("");
+      })
+      .catch((err) => {
+        setProducts([]);
+        setLoadError(err.message || "Failed to load products.");
+      });
+  }, [searchQuery, selectedCategory, selectedStatus]);
 
   return (
     <div className="products-page">
       <div className="products-inner">
         <h1 className="products-title">Products</h1>
+        {loadError && <p className="products-error">{loadError}</p>}
 
-        {/* Toolbar Controls */}
         <div className="products-toolbar">
           <div className="products-search">
             <input
@@ -114,7 +117,6 @@ export default function Products() {
           </button>
         </div>
 
-        {/* Table Container */}
         <div className="products-table-wrap">
           <table className="products-table">
             <thead>
@@ -129,7 +131,7 @@ export default function Products() {
               </tr>
             </thead>
             <tbody>
-              {initialProducts.map((product) => (
+              {productRows.map((product) => (
                 <tr key={product.productId}>
                   <td>{product.productId}</td>
                   <td>{product.productName}</td>
@@ -163,7 +165,6 @@ export default function Products() {
         </div>
       </div>
 
-      {/* Pop-up Modal */}
       <AddProductModal
         isOpen={isAddProductOpen}
         onClose={() => setIsAddProductOpen(false)}

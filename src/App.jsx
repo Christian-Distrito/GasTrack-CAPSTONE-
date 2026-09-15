@@ -17,6 +17,7 @@ import ReportCompliance from "./ReportCompliance";
 import Data from "./Data";
 import OrderAndDelivery from "./OrderAndDelivery";
 import LogoutModal from "./LogoutModal";
+import { apiRequest } from "./api";
 
 // ---------------------------------------------------------------------------
 // App shell — Sidebar on the left, active page on the right.
@@ -42,24 +43,28 @@ const pages = {
 };
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(localStorage.getItem("token")));
   const [activeItem, setActiveItem] = useState("dashboard");
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  const handleLogin = async ({ username, password }) => {
-    // Replace this with your real authentication call, e.g.:
-    // const res = await fetch("/api/auth/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ username, password }),
-    // });
-    // if (!res.ok) throw new Error("Invalid username or password");
-    console.log("Logging in with", username, password);
+  const handleLogin = async ({ email, password }) => {
+    const data = await apiRequest("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
     setIsAuthenticated(true);
   };
 
   const handleLogout = () => {
     setIsLogoutModalOpen(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setIsAuthenticated(false);
     setActiveItem("dashboard");
   };
