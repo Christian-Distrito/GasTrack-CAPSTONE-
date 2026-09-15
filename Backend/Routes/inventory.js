@@ -2,6 +2,15 @@ import express from "express";
 import { pool } from "../db.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
 
+// =============================================================================
+// INVENTORY API
+// restock-suggestions now uses the real formula
+// MAX(0, ReorderLevel + SafetyStock - StockOnHand) instead of the earlier
+// rough reorder_level * 2 placeholder guess. Requires patch_safety_stock.sql
+// to have been run (adds product.safety_stock). Purely additive/behavioral
+// improvement to an existing endpoint — no version bump needed.
+// =============================================================================
+
 const router = express.Router();
 
 // ---------------------------------------------------------------------------
@@ -83,13 +92,13 @@ router.get("/restock-suggestions", requireAuth, async (req, res) => {
   try {
     const result = await pool.query(
       `
-      SELECT p.product_id, p.product_name, p.reorder_level,
+      SELECT p.product_id, p.product_name, p.reorder_level, p.safety_stock,
              COALESCE(SUM(i.stock_on_hand), 0) AS total_stock
       FROM product p
       JOIN inventory i ON i.product_id = p.product_id
       JOIN warehouse w ON w.warehouse_id = i.warehouse_id
       WHERE w.company_id = $1 AND p.status = 'Active'
-      GROUP BY p.product_id, p.product_name, p.reorder_level
+      GROUP BY p.product_id, p.product_name, p.reorder_level, p.safety_stock
       HAVING COALESCE(SUM(i.stock_on_hand), 0) <= p.reorder_level
       ORDER BY (COALESCE(SUM(i.stock_on_hand), 0)::float / NULLIF(p.reorder_level, 0)) ASC
       `,
@@ -99,13 +108,19 @@ router.get("/restock-suggestions", requireAuth, async (req, res) => {
     const suggestions = result.rows.map((row) => {
       const stock = Number(row.total_stock);
       const reorderLevel = row.reorder_level;
+      const safetyStock = row.safety_stock;
       const isCritical = stock <= reorderLevel * 0.5;
 
+      // Same shape as the future ML-driven version:
+      // suggest = MAX(0, ReorderLevel + SafetyStock - StockOnHand)
+      // ReorderLevel stands in for "expected demand" here since there's no
+      // trained model yet — this becomes PredictedDemand once XGBoost exists,
+      // with the formula itself staying identical.
       return {
         productId: row.product_id,
         name: row.product_name,
         stock,
-        suggest: Math.max(reorderLevel * 2 - stock, 0),
+        suggest: Math.max(reorderLevel + safetyStock - stock, 0),
         status: isCritical ? "Critical" : "Low Stock",
       };
     });

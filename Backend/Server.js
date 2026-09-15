@@ -12,8 +12,10 @@ import salesRouter from "./Routes/Sales.js";
 import ordersRouter from "./Routes/orders.js";
 import deliveriesRouter from "./Routes/deliveries.js";
 import posRouter from "./Routes/pos.js";
+import restockRouter from "./Routes/restock.js";
 import arRouter from "./Routes/ar.js";
 import mobileHomeRouter from "./Routes/mobileHome.js";
+
 
 dotenv.config();
 
